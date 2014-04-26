@@ -1,4 +1,15 @@
 FormValidator.js
 ================
 
-Form validation javascript library
+Javascript library for form validation
+
+## Features
+
+* regexp based validation
+* function based validation
+* multiple cascade regexp/function per field
+* no dependency from other framework
+
+## License 
+
+MIT
