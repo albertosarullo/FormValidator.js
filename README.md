@@ -7,7 +7,7 @@ Javascript library for form validation
 
 * regexp based validation
 * function based validation
-* multiple regexp/function per field
+* multiple cascade regexp/function per field
 * no dependency from other framework
 
 ## License 
