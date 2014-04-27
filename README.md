@@ -1,18 +1,26 @@
 FormValidator.js
 ================
 
-Javascript library for form validation
+Javascript library for form data validation
 
 ## Features
 
-* regexp based validation
-* function based validation
-* multiple cascade regexp/function per field
-* no dependency from other framework
+Validation based on:
+* single regexp per field
+* single synchronous/asynchronous function per field
+* multiple cascade regexps per field
+* multiple cascade functions per field
 
-## Compatibility
+Dependencies
+* no dependency from other framework, but I create a wrapper for use as jquery plugin
+
+## Browser Compatibility
 
 IE8+, Chrome, Firefox, Safari
+
+## Todo
+
+* multiple async cascade function per field validation
 
 ## License 
 
