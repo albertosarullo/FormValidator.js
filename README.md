@@ -18,7 +18,7 @@ Dependencies:
 
 ## Examples 
 
-### Basic, wrapped as jquery plugin /examples/basic.html
+Basic, wrapped as jquery plugin - /examples/basic.html
 
 ```javascript
 $('.form-to-validate').formValidator({
