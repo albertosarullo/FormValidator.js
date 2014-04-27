@@ -8,10 +8,8 @@ var FormValidator = (function FormValidator() {
 	'use strict';
 
 	var errors = [],
-		tempError = null,
 
 		rulesNumber = 0,
-		asyncFunctionCounter = 0,
 		successCounter = 0,
 		failCounter = 0,
 
@@ -30,58 +28,42 @@ var FormValidator = (function FormValidator() {
 	function validateField(data, obj, field, successCallback, failCallback) {
 		var returnValue;
 		if (isFunction(obj.rule)) {
-
 			// only 1 parameter: sync version
 			if (obj.rule.length === 1) {
-				// asyncFunctionCounter++;
-				returnValue = obj.rule(data[field]);
-				if (returnValue === false) {
-					if (tempError === null) {
-						tempError = {
-							field: field,
-							msg:obj.message || field
-						};
-						failCallback(tempError);
-					}
+				if (obj.rule(data[field])) {
+					successCallback(field, data[field]);
 				} else {
-					successCallback();
+					failCallback({
+						field: field,
+						msg: obj.message || field
+					});
 				}
-				// todo: async with promises return {done:f(){}, fail:f(){}}
-			
 			} else {
 				// async version
-				asyncFunctionCounter++;
-				returnValue = obj.rule(data[field], function successRule() {
-					successCallback();
+				obj.rule(data[field], function successRule() {
+					successCallback(field, data[field]);
 				}, function failRule() {
-					//if (tempError === null) {
-						tempError = {
-							field: field,
-							msg:obj.message
-						};
-						failCallback(tempError);
-					//}
+					failCallback({
+						field: field,
+						msg: obj.message
+					});
 				});
 			}
 		} else {
-			// asyncFunctionCounter++;
-			if (!obj.rule.test(data[field])) {
-				if (tempError === null) {
-					tempError = {
-						field: field,
-						msg:obj.message || field
-					};
-					failCallback(tempError);
-				}
+			// regexp
+			if (obj.rule.test(data[field])) {
+				successCallback(field, data[field]);
 			} else {
-				successCallback();
+				failCallback({
+					field: field,
+					msg: obj.message || field
+				});
 			}
 		}
 	}
 
 	function countRules(rules) {
 		rulesNumber = 0;
-		asyncFunctionCounter = 0;
 		failCounter = 0;
 		successCounter = 0;
 		var field,
@@ -105,36 +87,85 @@ var FormValidator = (function FormValidator() {
 			field;
 		errors = [];
 
-		function success() {
-			successCounter++;
-			console.log(failCounter, successCounter, rulesNumber);
-			if (successCounter === rulesNumber) {
-				successCallback();
+		var queues = {};
+
+		for (field in rules) {
+			rule = rules[field];
+			if (isArray(rule)) {
+				for (i = 0; i < rule.length; i++) {
+					createQueue(field, data, rule[i]);
+				}
+			} else {
+				createQueue(field, data, rule);
 			}
 		}
 
-		function fail(error) {
+		function createQueue(field, data, rule) {
+			// validateField(data, rule[i], field, fieldSuccess, fieldFail);
+			if (queues[field] === undefined) {
+				queues[field] = [];
+			}
+			queues[field].push({
+				field: field,
+				data: data,
+				rule: rule,
+				f:function(data, rule, field, callbackOk, callbackKo) {
+					validateField(data, rule, field, function(field, value) {
+						fieldSuccess(field, value);
+						callbackOk();
+					}, function(error) {
+						fieldFail(error) ;
+						callbackKo();
+					});
+				}
+			});
+		}
+
+		function processQueue(queueId) {
+			var queue = queues[queueId];
+			var queueObj = queue.shift();
+			if (queueObj) {
+				// queueObj.f(queueObj.data, queueObj.rule, queueObj.field, function callbackOk() {
+				validateField(queueObj.data, queueObj.rule, queueObj.field, function callbackOk(field, value) {
+					fieldSuccess(field, value);
+					if (queue.length > 0) {
+						processQueue(queueId);
+					} else {
+						successCallback();
+					}
+				}, function callbackKo(errors) {
+					fieldFail(errors) ;
+					failCallback();
+				});
+			} else {
+				console.log('queue ended');
+			}
+		}
+
+		for (var queueId in queues) {
+			processQueue(queueId);
+		}
+
+		function fieldSuccess(field, value) {
+			successCounter++;
+			console.log('ok', field, value);
+
+			console.log(failCounter, successCounter, rulesNumber);
+			if (successCounter === rulesNumber) {
+			// 	successCallback();
+			}
+		}
+
+		function fieldFail(error) {
 			errors.push(error);
 			console.log(error.msg);
 			failCounter++;
 			console.log(failCounter, successCounter, rulesNumber);
 			if (failCounter + successCounter === rulesNumber) {
-				failCallback();
+			// 	failCallback();
 			}
 		}
-
-		for (field in rules) {
-			rule = rules[field];
-			if (isArray(rule)) {
-				tempError = null;
-				for (i = 0; i < rule.length; i++) {
-					validateField(data, rule[i], field, success, fail);
-				}
-			} else {
-				tempError = null;
-				validateField(data, rule, field, success, fail);
-			}
-		}
+			
 	}
 
 	return {
