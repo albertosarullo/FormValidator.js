@@ -26,12 +26,12 @@ var FormValidator = (function FormValidator() {
 	}
 
 	function validateField(data, obj, field, successCallback, failCallback) {
-		var returnValue;
+		var value = data[field];
 		if (isFunction(obj.rule)) {
 			// only 1 parameter: sync version
 			if (obj.rule.length === 1) {
-				if (obj.rule(data[field])) {
-					successCallback(field, data[field]);
+				if (obj.rule(value)) {
+					successCallback(field, value);
 				} else {
 					failCallback({
 						field: field,
@@ -40,8 +40,8 @@ var FormValidator = (function FormValidator() {
 				}
 			} else {
 				// async version
-				obj.rule(data[field], function successRule() {
-					successCallback(field, data[field]);
+				obj.rule(value, function successRule() {
+					successCallback(field, value);
 				}, function failRule() {
 					failCallback({
 						field: field,
@@ -51,8 +51,8 @@ var FormValidator = (function FormValidator() {
 			}
 		} else {
 			// regexp
-			if (obj.rule.test(data[field])) {
-				successCallback(field, data[field]);
+			if (obj.rule.test(value)) {
+				successCallback(field, value);
 			} else {
 				failCallback({
 					field: field,
@@ -117,6 +117,7 @@ var FormValidator = (function FormValidator() {
 		}
 
 		function processQueue(queueId) {
+			console.log('processQueue' + queueId);
 			var queue = queues[queueId];
 			var queueObj = queue.shift();
 			if (queueObj) {
@@ -125,14 +126,18 @@ var FormValidator = (function FormValidator() {
 					if (queue.length > 0) {
 						processQueue(queueId);
 					} else {
+						console.log('queue ' + queueId + ' ended');
+						// todo:  only if all queue are closed call succesCallback
 						successCallback();
+
 					}
 				}, function callbackKo(errors) {
-					fieldFail(errors) ;
+					fieldFail(errors);
+					// todo: call failCallback only if all queu are close
 					failCallback();
 				});
 			} else {
-				console.log('queue ended');
+				console.log('queue ' + queueId + ' ended');
 			}
 		}
 
