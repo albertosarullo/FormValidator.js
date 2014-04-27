@@ -1,11 +1,10 @@
-function formValidator(config) {
+var FormValidator = (function FormValidator() {
 	var errors = [];
 	var tempError = null;
 
 	function validateField(data, obj, field) {
 		var returnValue;
 		if (typeof obj.rule === 'function') {
-
 			// only 1 parameter: sync version
 			if (obj.rule.length === 1 ) {
 				returnValue = obj.rule(data[field]);
@@ -18,13 +17,6 @@ function formValidator(config) {
 						errors.push(tempError);
 					}
 				}
-			} else {
-				// async version
-				returnValue = obj.rule(data[field], function success() {
-					console.log('async success');
-				}, function fail() {
-					console.log('async fail');
-				});
 			}
 		} else {
 			if (!obj.rule.test(data[field])) {
@@ -43,6 +35,7 @@ function formValidator(config) {
 		var i,
 			rule,
 			field;
+		errors = [];
 		for (field in rules) {
 			rule = rules[field];
 			if (Object.prototype.toString.call(rule) === '[object Array]') {
@@ -59,7 +52,6 @@ function formValidator(config) {
 
 	return {
 		validate: function(data, rules) {
-			console.log('validate', this);
 			validateDataWithRules(data, rules);
 			return this;
 		},
@@ -78,6 +70,7 @@ function formValidator(config) {
 		always: function always(f) {
 			f.call(this);
 			return this;
-		}
+		},
+		EMAIL: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
 	};
-}
+})();
