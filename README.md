@@ -16,7 +16,9 @@ Dependencies:
 
 * no dependency from other framework, but I create a wrapper for use as jquery plugin (see below)
 
-## Example (basic, wrapped as jquery plugin)
+## Examples 
+
+### Basic, wrapped as jquery plugin /examples/basic.html
 
 ```javascript
 $('.form-to-validate').formValidator({
