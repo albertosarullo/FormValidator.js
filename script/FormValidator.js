@@ -100,6 +100,10 @@ var FormValidator = (function FormValidator() {
 			}
 		}
 
+		for (var queueId in queues) {
+			processQueue(queueId);
+		}
+
 		function createQueue(field, data, rule) {
 			// validateField(data, rule[i], field, fieldSuccess, fieldFail);
 			if (queues[field] === undefined) {
@@ -108,16 +112,7 @@ var FormValidator = (function FormValidator() {
 			queues[field].push({
 				field: field,
 				data: data,
-				rule: rule,
-				f:function(data, rule, field, callbackOk, callbackKo) {
-					validateField(data, rule, field, function(field, value) {
-						fieldSuccess(field, value);
-						callbackOk();
-					}, function(error) {
-						fieldFail(error) ;
-						callbackKo();
-					});
-				}
+				rule: rule
 			});
 		}
 
@@ -125,7 +120,6 @@ var FormValidator = (function FormValidator() {
 			var queue = queues[queueId];
 			var queueObj = queue.shift();
 			if (queueObj) {
-				// queueObj.f(queueObj.data, queueObj.rule, queueObj.field, function callbackOk() {
 				validateField(queueObj.data, queueObj.rule, queueObj.field, function callbackOk(field, value) {
 					fieldSuccess(field, value);
 					if (queue.length > 0) {
@@ -142,28 +136,28 @@ var FormValidator = (function FormValidator() {
 			}
 		}
 
-		for (var queueId in queues) {
-			processQueue(queueId);
-		}
-
 		function fieldSuccess(field, value) {
 			successCounter++;
+			/*
 			console.log('ok', field, value);
 
 			console.log(failCounter, successCounter, rulesNumber);
 			if (successCounter === rulesNumber) {
-			// 	successCallback();
+			 	successCallback();
 			}
+			*/
 		}
 
 		function fieldFail(error) {
 			errors.push(error);
+/*
 			console.log(error.msg);
 			failCounter++;
 			console.log(failCounter, successCounter, rulesNumber);
 			if (failCounter + successCounter === rulesNumber) {
 			// 	failCallback();
 			}
+			*/
 		}
 			
 	}
