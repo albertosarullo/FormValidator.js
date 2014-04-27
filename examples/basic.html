@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Form Validator JS</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <h1>Form Validator JS</h1>
+
+    <form class="form-to-validate">
+        <p>
+            Email: 
+            <input type="text" name="email" />
+            <span class="error-detail"></span>
+    	</p>
+    	<input type="submit" />
+    </form>
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../script/FormValidator.js"></script>
+    <script src="../script/FormValidatorJquery.js"></script>
+    
+    <script>
+    $(function() {
+        $('.form-to-validate').formValidator({
+            email: {
+                rule: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i,
+                message:"Mail must be valid"
+            }
+        }, {
+            success: function(e) {
+                alert('ok!')
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>
