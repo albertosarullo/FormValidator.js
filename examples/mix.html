@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Form Validator JS</title>
+        <link rel="stylesheet" href="../css/style.css" />
+    </head>
+    <body>
+    	
+        <h1>Form Validator JS</h1>
+
+        <form class="form-to-validate">
+        	<p>
+        		Name: 
+        		<input type="text" name="name" id="name"/>
+        		<span class="error-detail"></span>
+        	</p>
+        	<p>
+        		Surname: 
+        		<input type="text" name="surname" id="surname" />
+        		<span class="error-detail"></span>
+        	</p>
+        	<p>
+        		Email: 
+        		<input type="text" name="email" id="email"/>
+        		<span class="error-detail"></span>
+        	</p>
+        	<p>
+        		Comment: 
+        		<textarea name="comment" id="comment"/></textarea>
+        		<span class="error-detail"></span>
+        	</p>
+        	<p>
+        		Age: 
+        		<select name="age" id="age"/>
+	        		<option>1</option>
+	        		<option>2</option>
+	        		<option>3</option>
+	        		<option>4</option>
+	        		<option>5</option>
+	        		<option>6</option>
+	        	</select>
+	        	<span class="error-detail"></span>
+        	</p>
+        	<input type="submit" />
+        </form>
+
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script src="../script/formValidator.js"></script>
+        <script>
+    var rules = {
+        name: {
+            // function rule
+            rule: function(value) {
+                return value == 1;
+            },
+            message:"Devi indicare il tuo nome"
+        },
+        surname: {
+            // regexp rule
+            rule: /^[A-Za-z0-9 ]{3,20}$/,
+            message:"Devi indicare il tuo cognome"
+        },
+        email: [{  // cascading rule
+            rule: /^[A-Za-z0-9@ ]{6,7}$/,
+            message:"La mail deve essere compresa tra 6 e 7 caratteri"
+        }, {  // cascading rule
+            rule: /^[A-Za-z0-9@ ]{7,7}$/,
+            message:"La mail deve essere compresa tra 7 e 7 caratteri"
+        }],
+        
+        comment: {
+            // function rule
+            rule: function(value, successCallback, errorCallback) {
+                setTimeout(function() {
+                    if (value == 1) {
+                        successCallback();
+                    } else {
+                        errorCallback();
+                    }
+                }, 300);
+            },
+            message:"Devi scrivere un commento"
+        },
+        age: {
+            // function rule
+            rule: function(value) {
+                return value > 1;
+            },
+            message:"Devi indicare la tua età"
+        }
+    };
+        </script>
+		<script src="../script/common.js"></script>
+
+    </body>
+</html>
