@@ -23,17 +23,15 @@
     <script src="../script/FormValidatorJquery.js"></script>
     
     <script>
-    $(function() {
-        $('.form-to-validate').formValidator({
-            email: {
-                rule: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i,
-                message:"Mail must be valid"
-            }
-        }, {
-            success: function(e) {
-                alert('ok!')
-            }
-        });
+    $('.form-to-validate').formValidator({
+        email: {
+            rule: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i,
+            message: "Mail must be valid"
+        }
+    }, {
+        success: function(e) {
+            alert('ok!')
+        }
     });
     </script>
 
