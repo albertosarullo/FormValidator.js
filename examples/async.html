@@ -1,108 +1,72 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Form Validator JS</title>
-        <link rel="stylesheet" href="../css/style.css" />
-    </head>
-    <body>
+<head>
+    <meta charset="utf-8">
+    <title>Form Validator JS</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+	
+    <h1>Form Validator JS</h1>
+    <h2>Async Example</h2>
+    <form class="form-to-validate">
+    	<p>
+    		Name: 
+    		<input type="text" name="name" />
+    		<span class="error-detail"></span>
+    	</p>
     	
-        <h1>Form Validator JS</h1>
+    	<input type="submit" />
+    </form>
 
-        <form class="form-to-validate">
-        	<p>
-        		Name: 
-        		<input type="text" name="name" />
-        		<span class="error-detail"></span>
-        	</p>
-        	
-        	
-        	<input type="submit" />
-        </form>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="../script/formValidator.js"></script>
+	<script>
 
-        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-		<script src="../script/formValidator.js"></script>
-		<script>
-$(function() {
-    var $form = $('.form-to-validate');
-    var rules = {
-        name: [{  // cascading rule
-            rule: function(value, successCallback, errorCallback) {
-                setTimeout(function() {
-                    if (value > 1) {
-                        successCallback();
-                    } else {
-                        errorCallback();
-                    }
-                }, 3000);
-            },
-            message:"Nome deve essere > 1"
-        }, {  // cascading rule
-            rule: function(value) {
-                return true;
-            },
-            message:"Nome deve essere > 2"
-        }, {  // cascading rule
-            rule: function(value, successCallback, errorCallback) {
-                setTimeout(function() {
-                    if (value > 3) {
-                        successCallback();
-                    } else {
-                        errorCallback();
-                    }
-                }, 2000);
-            },
-            message:"Nome deve essere > 3"
-        }, {  // cascading rule
-            rule: function(value, successCallback, errorCallback) {
-                setTimeout(function() {
-                    if (value > 4) {
-                        successCallback();
-                    } else {
-                        errorCallback();
-                    }
-                }, 1000);
-            },
-            message:"Nome deve essere > 4"
-        }]
-        
+var rules = {
+    name: [{  // cascading rule
+        rule: function(value, successCallback, errorCallback) {
+            setTimeout(function() {
+                if (value > 1) {
+                    successCallback();
+                } else {
+                    errorCallback();
+                }
+            }, 3000);
+        },
+        message: "Nome deve essere > 1"
+    }, {  // cascading rule
+        rule: function(value) {
+            return true;
+        },
+        message: "Nome deve essere > 2"
+    }, {  // cascading rule
+        rule: function(value, successCallback, errorCallback) {
+            setTimeout(function() {
+                if (value > 3) {
+                    successCallback();
+                } else {
+                    errorCallback();
+                }
+            }, 2000);
+        },
+        message: "Nome deve essere > 3"
+    }, {  // cascading rule
+        rule: function(value, successCallback, errorCallback) {
+            setTimeout(function() {
+                if (value > 4) {
+                    successCallback();
+                } else {
+                    errorCallback();
+                }
+            }, 1000);
+        },
+        message: "Nome deve essere > 4"
+    }]        
+};
 
-        
-    };
-    
-    $form.on('submit', function(e) {
-        e.preventDefault();
-
-        var data = {};
-        $.map($form.serializeArray(), function (obj) {
-            data[obj.name] = obj.value;
-        });
-
-        $('.error-detail', $form).html('');
-        $('.input-error', $form).removeClass('input-error');
-        
-        
-        FormValidator
-            .validate(data, rules)
-            .done(function() {
-                console.log('success');
-            })
-            .fail(function(errors) {
-                console.log('fail');
-                $.each(errors, function(index, error) {
-                    //console.log(error.field);
-                    var $field = $("[name='" + error.field + "']", $form);
-                    $field.addClass('input-error');
-                    $field.parent().children('.error-detail').html(error.msg);
-                });
-            })
-            .always(function() {
-                console.log('always');
-            });
-    });
-});
-        </script>
-
-    </body>
+    </script>
+    <script src="../script/common.js"></script>
+</body>
 </html>
