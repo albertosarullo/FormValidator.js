@@ -30,7 +30,6 @@ $('.form-to-validate').formValidator({
     	},
     	message: "Age must be 18+"
 	}
-}
 }, {
     success: function(e) {
         alert('ok!')
