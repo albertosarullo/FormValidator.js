@@ -25,8 +25,7 @@ var FormValidator = (function FormValidator() {
 		return typeof obj === 'function';
 	}
 
-	function validateField(data, obj, field, successCallback, failCallback) {
-		var value = data[field];
+	function validateField(value, obj, field, successCallback, failCallback) {
 		if (isFunction(obj.rule)) {
 			// only 1 parameter: sync version
 			if (obj.rule.length === 1) {
@@ -84,19 +83,21 @@ var FormValidator = (function FormValidator() {
 	function validateDataWithRules(data, rules, successCallback, failCallback) {
 		var i,
 			rule,
-			field;
+			field,
+			value;
 		errors = [];
 
 		var queues = {};
 
 		for (field in rules) {
 			rule = rules[field];
+			value = data[field];
 			if (isArray(rule)) {
 				for (i = 0; i < rule.length; i++) {
-					createQueue(field, data, rule[i]);
+					createQueue(field, value, rule[i]);
 				}
 			} else {
-				createQueue(field, data, rule);
+				createQueue(field, value, rule);
 			}
 		}
 
@@ -104,65 +105,60 @@ var FormValidator = (function FormValidator() {
 			processQueue(queueId);
 		}
 
-		function createQueue(field, data, rule) {
-			// validateField(data, rule[i], field, fieldSuccess, fieldFail);
+		function createQueue(field, value, rule) {
 			if (queues[field] === undefined) {
 				queues[field] = [];
 			}
 			queues[field].push({
 				field: field,
-				data: data,
+				value: value,
 				rule: rule
 			});
 		}
 
 		function processQueue(queueId) {
-			console.log('processQueue' + queueId);
 			var queue = queues[queueId];
 			var queueObj = queue.shift();
 			if (queueObj) {
-				validateField(queueObj.data, queueObj.rule, queueObj.field, function callbackOk(field, value) {
+				validateField(queueObj.value, queueObj.rule, queueObj.field, function callbackOk(field, value) {
 					fieldSuccess(field, value);
 					if (queue.length > 0) {
 						processQueue(queueId);
 					} else {
 						console.log('queue ' + queueId + ' ended');
-						// todo:  only if all queue are closed call succesCallback
-						successCallback();
-
+						queue.empty = true;
+						if (queuesAreEmpty()) {
+							successCallback();
+						}
 					}
 				}, function callbackKo(errors) {
 					fieldFail(errors);
+					queue.empty = true;
 					// todo: call failCallback only if all queu are close
-					failCallback();
+					if (queuesAreEmpty()) {
+						failCallback();
+					}
 				});
 			} else {
 				console.log('queue ' + queueId + ' ended');
 			}
 		}
 
+		function queuesAreEmpty() {
+			for (var queueId in queues) {
+				if (queues[queueId].empty !== true) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		function fieldSuccess(field, value) {
 			successCounter++;
-			/*
-			console.log('ok', field, value);
-
-			console.log(failCounter, successCounter, rulesNumber);
-			if (successCounter === rulesNumber) {
-			 	successCallback();
-			}
-			*/
 		}
 
 		function fieldFail(error) {
 			errors.push(error);
-/*
-			console.log(error.msg);
-			failCounter++;
-			console.log(failCounter, successCounter, rulesNumber);
-			if (failCounter + successCounter === rulesNumber) {
-			// 	failCallback();
-			}
-			*/
 		}
 			
 	}
