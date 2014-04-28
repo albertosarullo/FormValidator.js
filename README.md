@@ -1,7 +1,8 @@
 FormValidator.js
 ================
 
-Javascript library for form data validation
+Micro javascript library (> 2K minified) for data validation, useful for complex form handling. 
+The core library abstract entirely from user interface aspect, but i realize a jquery plugin wrapped version to speed up common task. 
 
 ## Features
 
@@ -43,9 +44,10 @@ $('.form-to-validate').formValidator({
 
 IE8+, Chrome, Firefox, Safari
 
-## Todo
+## History
 
-* multiple async cascade function per field validation
+26/04/2014 - start project, regexp and sync validation supported
+27/04/2014 - rewrite library core to support cascade async validation funcions
 
 ## License 
 
