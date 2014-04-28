@@ -8,10 +8,9 @@ var FormValidator = (function FormValidator() {
 	'use strict';
 
 	var errors = [],
-
-		doneFunction,
-		failFunction,
-		alwaysFunction;
+		doneFunction = function() {},
+		failFunction = function() {},
+		alwaysFunction = function() {};
 
 	function isArray(obj) {
 		return Object.prototype.toString.call(obj) === '[object Array]';
@@ -95,7 +94,11 @@ var FormValidator = (function FormValidator() {
 						console.log('queue ' + queue + ' ended');
 						queue.empty = true;
 						if (queuesAreEmpty()) {
-							successCallback();
+							if (errors.length === 0) {
+								successCallback();
+							} else {
+								failCallback();
+							}
 						}
 					}
 				}, function callbackKo(field, message) {
@@ -107,7 +110,7 @@ var FormValidator = (function FormValidator() {
 				});
 			}
 		}
-
+		// todo: for make progress visibile, queue are empty must be return true always
 		function queuesAreEmpty() {
 			for (var queueId in queues) {
 				if (queues[queueId].empty !== true) {
@@ -124,13 +127,11 @@ var FormValidator = (function FormValidator() {
 			var that = this;
 			setTimeout(function() {
 				validateDataWithRules(data, rules, function success() {
-					if (isFunction(doneFunction)) {
-						doneFunction.call(that);
-					}
+					doneFunction.call(that);
+					alwaysFunction.call(that);
 				}, function fail() {
-					if (isFunction(failFunction)) {
-						failFunction.call(that, errors);
-					}
+					failFunction.call(that, errors);
+					alwaysFunction.call(that);
 				});
 			}, 10);
 			return this;
