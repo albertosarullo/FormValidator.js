@@ -1,7 +1,8 @@
 FormValidator.js
 ================
 
-Micro javascript library (> 2K minified) for data validation, useful for complex form handling. 
+Micro javascript library (> 2K minified) for data validation, useful for complex form handling.
+
 The core library abstract entirely from user interface aspect, but i realize a jquery plugin wrapped version to speed up common task. 
 
 ## Features
@@ -16,6 +17,41 @@ Validation based on:
 Dependencies:
 
 * no dependency from other framework, but I create a wrapper for use as jquery plugin (see below)
+
+## How works
+
+The library receive data, rules, and apply the rules to the data to valitadate them.
+
+Data must be a javascript object like this:
+
+```javascript
+{
+    name: "Albertoooo",
+    age: "34"
+}
+
+```
+
+Rules must be a javascript object like this:
+
+```javascript
+{
+    name: {
+        rule: function(value) {
+            return value === "Alberto";
+        },
+        message: "Name must be 'Alberto'"
+    },
+    age: {
+        rule: function(value) {
+            return value > 18;
+        },
+        message: "Age must be 18+"
+    }
+}
+```
+
+
 
 ## Examples 
 
@@ -46,8 +82,8 @@ IE8+, Chrome, Firefox, Safari
 
 ## History
 
-26/04/2014 - start project, regexp and sync validation supported
-27/04/2014 - rewrite library core to support cascade async validation funcions
+* 26/04/2014 - start project, regexp and sync validation supported
+* 27/04/2014 - rewrite library core to support cascade async validation funcions
 
 ## License 
 
