@@ -1,7 +1,7 @@
 FormValidator.js
 ================
 
-Micro javascript library (> 2K minified) for data validation, useful for complex form handling.
+Micro javascript library (< 2K minified) for data validation, useful for complex form handling.
 
 The core library abstract entirely from user interface aspect, but i realize a jquery plugin wrapped version to speed up common task. 
 
@@ -20,19 +20,18 @@ Dependencies:
 
 ## How works
 
-The library receive data, rules, and apply the rules to the data to valitadate them.
+The library receive *data*, *rules*, and apply the rules to the data to valitadate them.
 
-Data must be a javascript object like this:
+The *data* object must be like this:
 
 ```javascript
 {
     name: "Albertoooo",
     age: "34"
 }
-
 ```
 
-Rules must be a javascript object like this:
+The *rules* object must be like this:
 
 ```javascript
 {
