@@ -9,10 +9,6 @@ var FormValidator = (function FormValidator() {
 
 	var errors = [],
 
-		rulesNumber = 0,
-		successCounter = 0,
-		failCounter = 0,
-
 		doneFunction,
 		failFunction,
 		alwaysFunction;
@@ -32,20 +28,14 @@ var FormValidator = (function FormValidator() {
 				if (obj.rule(value)) {
 					successCallback(field, value);
 				} else {
-					failCallback({
-						field: field,
-						msg: obj.message || field
-					});
+					failCallback(field, obj.message);
 				}
 			} else {
 				// async version
 				obj.rule(value, function successRule() {
 					successCallback(field, value);
 				}, function failRule() {
-					failCallback({
-						field: field,
-						msg: obj.message
-					});
+					failCallback(field, obj.message);
 				});
 			}
 		} else {
@@ -53,29 +43,7 @@ var FormValidator = (function FormValidator() {
 			if (obj.rule.test(value)) {
 				successCallback(field, value);
 			} else {
-				failCallback({
-					field: field,
-					msg: obj.message || field
-				});
-			}
-		}
-	}
-
-	function countRules(rules) {
-		rulesNumber = 0;
-		failCounter = 0;
-		successCounter = 0;
-		var field,
-			rule,
-			i;
-		for (field in rules) {
-			rule = rules[field];
-			if (isArray(rule)) {
-				for (i = 0; i < rule.length; i++) {
-					rulesNumber++;
-				}
-			} else {
-				rulesNumber++;
+				failCallback(field, obj.message);
 			}
 		}
 	}
@@ -131,8 +99,9 @@ var FormValidator = (function FormValidator() {
 							successCallback();
 						}
 					}
-				}, function callbackKo(errors) {
-					fieldFail(errors);
+				}, function callbackKo(field, message) {
+					errors.push({field: field, msg: message});
+					// fieldFail(error);
 					queue.empty = true;
 					// todo: call failCallback only if all queu are close
 					if (queuesAreEmpty()) {
@@ -152,14 +121,6 @@ var FormValidator = (function FormValidator() {
 			}
 			return true;
 		}
-
-		function fieldSuccess(field, value) {
-			successCounter++;
-		}
-
-		function fieldFail(error) {
-			errors.push(error);
-		}
 			
 	}
 
@@ -167,7 +128,6 @@ var FormValidator = (function FormValidator() {
 		validate: function(data, rules) {
 			var that = this;
 			setTimeout(function() {
-				countRules(rules);
 				validateDataWithRules(data, rules, function success() {
 					if (isFunction(doneFunction)) {
 						doneFunction.call(that);
