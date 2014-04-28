@@ -70,7 +70,7 @@ var FormValidator = (function FormValidator() {
 		}
 
 		for (var queueId in queues) {
-			processQueue(queueId);
+			processQueue(queues[queueId]);
 		}
 
 		function createQueue(field, value, rule) {
@@ -84,16 +84,15 @@ var FormValidator = (function FormValidator() {
 			});
 		}
 
-		function processQueue(queueId) {
-			var queue = queues[queueId];
+		function processQueue(queue) {
 			var queueObj = queue.shift();
 			if (queueObj) {
 				validateField(queueObj.value, queueObj.rule, queueObj.field, function callbackOk(field, value) {
-					fieldSuccess(field, value);
+					// fieldSuccess(field, value);
 					if (queue.length > 0) {
-						processQueue(queueId);
+						processQueue(queue);
 					} else {
-						console.log('queue ' + queueId + ' ended');
+						console.log('queue ' + queue + ' ended');
 						queue.empty = true;
 						if (queuesAreEmpty()) {
 							successCallback();
@@ -101,15 +100,11 @@ var FormValidator = (function FormValidator() {
 					}
 				}, function callbackKo(field, message) {
 					errors.push({field: field, msg: message});
-					// fieldFail(error);
 					queue.empty = true;
-					// todo: call failCallback only if all queu are close
 					if (queuesAreEmpty()) {
 						failCallback();
 					}
 				});
-			} else {
-				console.log('queue ' + queueId + ' ended');
 			}
 		}
 
