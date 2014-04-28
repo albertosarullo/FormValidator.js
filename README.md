@@ -81,8 +81,9 @@ IE8+, Chrome, Firefox, Safari
 
 ## History
 
-* 26/04/2014 - start project, regexp and sync validation supported
-* 27/04/2014 - rewrite library core to support cascade async validation funcions
+* 28/04/2014 - Added tests, isolated and fixed bug
+* 27/04/2014 - Rewrite library core to support cascade async validation funcions
+* 26/04/2014 - Start project, regexp and sync validation supported
 
 ## License 
 
