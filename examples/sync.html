@@ -11,11 +11,21 @@
     <h2>Sync Example</h2>
     <form class="form-to-validate">
     	<p>
-    		Name: 
-    		<input type="text" name="name" />
-    		<span class="error-detail"></span>
-    	</p>
-    	
+            Name: 
+            <input type="text" name="name" />
+            <span class="error-detail"></span>
+        </p>
+        <p>
+            Surname: 
+            <input type="text" name="surname" />
+            <span class="error-detail"></span>
+        </p>
+        <p>
+            Email: 
+            <input type="text" name="email" />
+            <span class="error-detail"></span>
+        </p>
+        
     	
     	<input type="submit" />
     </form>
@@ -26,15 +36,27 @@
 	<script>
     
 var rules = {
-     name: {  // cascading rule
+    name: {  // cascading rule
         rule: function(value) {
-            return value > 1;
+            return true;
+        },
+        message:"Nome deve essere > 2"
+    },
+    surname: {  // cascading rule
+        rule: function(value) {
+            return false;
+        },
+        message:"Nome deve essere > 2"
+    },
+    email: {  // cascading rule
+        rule: function(value) {
+            return true;
         },
         message:"Nome deve essere > 2"
     }
 };
 
     </script>
-    <script src="../script/common.js"></script>
+    <script src="common.js"></script>
 </body>
 </html>

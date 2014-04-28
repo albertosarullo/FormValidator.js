@@ -9,7 +9,7 @@ $form.on('submit', function(e) {
     });
 
     $('.error-detail', $form).html('');
-    $('.input-error', $form).removeClass('input-error');
+    $('.field-not-valid', $form).removeClass('field-not-valid');
     
     FormValidator
         .validate(data, rules)
@@ -21,7 +21,7 @@ $form.on('submit', function(e) {
             $.each(errors, function(index, error) {
                 //console.log(error.field);
                 var $field = $("[name='" + error.field + "']", $form);
-                $field.addClass('input-error');
+                $field.addClass('field-not-valid');
                 $field.parent().children('.error-detail').html(error.msg);
             });
         })
