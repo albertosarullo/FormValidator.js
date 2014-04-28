@@ -20,9 +20,7 @@ Dependencies:
 
 ## How works
 
-The library receive *data*, *rules*, and apply the rules to the data to valitadate them.
-
-The *data* object must be like this:
+The library validate *data* using *rules*. The *data* object must be like this:
 
 ```javascript
 {
