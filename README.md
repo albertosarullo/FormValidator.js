@@ -1,43 +1,31 @@
 FormValidator.js
 ================
 
-Micro javascript library (< 2K minified) for data validation, useful for complex form handling.
+Javascript data validation library, useful for complex form handling.
 
-The core library abstract entirely from user interface aspect, but i realize a jquery plugin wrapped version to speed up common task. 
+The library abstract from user interface aspect, but I write a jquery plugin wrapper to speed up common task. 
 
 ## Features
 
-Validation based on:
-
-* single regexp per field
-* single synchronous/asynchronous function per field
-* multiple cascade regexps per field
-* multiple cascade functions per field
-
-Dependencies:
-
-* no dependency from other framework, but I create a wrapper for use as jquery plugin (see below)
+* Single or multiple rules per field
+* Rules as regexp, function or async functions with callback
+* No dependency from other framework
+* Lightweight  (< 2k minified)
+* Fully tested (100% code coverage)
 
 ## How works
 
-The library validate *data* using *rules*. The *data* object must be like this:
+The library validate *data* using *rules*. 
 
 ```javascript
-{
-    name: "Albertoooo",
+var data = {
+    name: "Alberto",
     age: "34"
 }
-```
-
-The *rules* object must be like this:
-
-```javascript
-{
+var rules = {
     name: {
-        rule: function(value) {
-            return value === "Alberto";
-        },
-        message: "Name must be 'Alberto'"
+        rule: /^[a-zA-Z0-9 ,]+$/,
+        message: "Name must be alphanumeric"
     },
     age: {
         rule: function(value) {
@@ -46,6 +34,16 @@ The *rules* object must be like this:
         message: "Age must be 18+"
     }
 }
+
+FormValidator
+  .validate(data, rules)
+  .done(function() {
+    // success
+  })
+  .fail(function(errors) {
+    // fail
+  })
+
 ```
 
 
@@ -61,11 +59,11 @@ $('.form-to-validate').formValidator({
         message: "Mail must be valid"
     },
     age: {
-    	rule: function(value) {
-    		return value >= 18;
-    	},
-    	message: "Age must be 18+"
-	}
+      rule: function(value) {
+        return value >= 18;
+      },
+      message: "Age must be 18+"
+  }
 }, {
     success: function(e) {
         alert('ok!')
