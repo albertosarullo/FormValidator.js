@@ -91,7 +91,7 @@ var FormValidator = (function FormValidator() {
 					if (queue.length > 0) {
 						processQueue(queue);
 					} else {
-						console.log('queue ' + queue + ' ended');
+						// console.log('queue ' + queue + ' ended');
 						queue.empty = true;
 						if (queuesAreEmpty()) {
 							if (errors.length === 0) {
@@ -146,9 +146,12 @@ var FormValidator = (function FormValidator() {
 		},
 		always: function always(f) {
 			alwaysFunction = f;
-			// f.call(this);
 			return this;
 		},
 		EMAIL: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
 	};
 })();
+
+if (exports) {
+	exports.formValidator = FormValidator;
+}
